@@ -1,0 +1,33 @@
+{
+  "name": "@wadv/node-utils",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "stub": "pnpm unbuild --stub",
+    "replace": "node ./scripts/replace.mjs",
+    "cmd-replace": "cmd /k node ./scripts/replace.mjs",
+    "clean-only": "node ./scripts/clean.mjs",
+    "clean": "pnpm clean-only --del-lock",
+    "reinstall": "pnpm clean-only --del-lock && pnpm install"
+  },
+  "dependencies": {
+    "minimatch": "^10.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.1",
+    "unbuild": "^2.0.0"
+  },
+  "packageManager": "pnpm@9.14.1",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9.12.0"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "eslint": "*"
+      }
+    }
+  }
+}
