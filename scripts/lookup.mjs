@@ -18,14 +18,18 @@ import { startLookup } from "../dist/index.mjs";
   const excludes = ["node_modules", "dist", ".git", ".turbo", "dist.zip"];
   // 要修改的文件
   const targets = [
+    // {
+    //   name: "查找中文文件",
+    //   regex: /[\u4e00-\u9fff]/,
+    //   pattern: "**/*",
+    // },
+    // {
+    //   name: "查找带copy的文件",
+    //   regex: /copy/,
+    //   pattern: "**/*",
+    // },
     {
-      name: "查找中文文件",
-      regex: /[\u4e00-\u9fff]/,
-      pattern: "**/*",
-    },
-    {
-      name: "查找带copy的文件",
-      regex: /copy/,
+      name: "正则匹配文件（--reg=不要头和尾得斜杠/）",
       pattern: "**/*",
     },
   ];

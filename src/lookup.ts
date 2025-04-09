@@ -1,9 +1,9 @@
 import { join, normalize, relative } from 'node:path';
 import { StartLookupOptions } from './type';
 import { existsSync, readdirSync, statSync } from 'node:fs';
-import { minimatch } from 'minimatch';
-// 总计数
-let total = 0;
+import { minimatch, unescape } from 'minimatch';
+import { promises as fs } from 'node:fs';
+
 /**
  * 支持排除目录/文件的中文文件名搜索
  * @param dirPath 目标目录路径
@@ -51,7 +51,7 @@ function findLookupFiles(
                     chineseRegex.test(entry)
                 ) {
                     results.push(fullPath);
-                    console.log(`\x1B[32m- Lookup: ${fullPath}\x1B[0m`);
+                    console.log(`\x1B[32m+ Lookup: ${fullPath}\x1B[0m`);
                 }
             }
         }
@@ -80,24 +80,40 @@ async function startLookup(option: StartLookupOptions) {
     // 去掉node和文件路径
     const args = process.argv.slice(2);
     const rootPath = args.find((arg) => arg.startsWith('--root'))?.split('=')[1];
-    const rootSrc = normalize(rootPath || '') || root;
+    const reg = args.find((arg) => arg.startsWith('--reg'))?.split('=')[1];
+    const regex = reg ? new RegExp(unescape(reg)) : /[\u4e00-\u9fff]/;
+    const rootSrc = rootPath ? normalize(rootPath || '') : root;
 
+    const deleteFile = process.argv.includes('--delete');
     console.log(`\x1B[46mStarting cleanup.\x1B[0m`);
     console.log();
     console.log(`Root: --root=${rootSrc}`);
-    console.log();
+    console.log(`Deleted: ${deleteFile}`);
+    console.log('Regex:', regex);
+
+    const results = [];
 
     for (const item of targets) {
         console.log();
-        console.log(`\x1B[36mTargets: ${item.name} Root: ${item.root || rootSrc}\x1B[0m`);
+        console.log(`\x1B[36mTargets: ${item.name}\x1B[0m`);
+        console.log(`\x1B[36mRoot: ${item.root || rootSrc}\x1B[0m`);
         console.log();
-        const lookupFiles = findLookupFiles(item.root || rootSrc, item.regex, item.excludes || excludes, item.pattern);
+        const lookupFiles = findLookupFiles(item.root || rootSrc, item.regex || regex, item.excludes || excludes, item.pattern);
         // console.log('中文文件:', lookupFiles);
-        total += lookupFiles.length;
+        results.push(...lookupFiles);
         console.log(`\x1B[36m\nEnding: ${lookupFiles.length} files\n\x1B[0m`);
     }
 
-    console.log(`\x1B[33m\nThe Lookup process completed a total of ${total} files\n\x1B[0m`);
+    if (deleteFile) {
+        for (const itemPath of results) {
+            // 匹配到目标目录或文件时直接删除
+            await fs.rm(itemPath, { force: true, recursive: true });
+            console.log(`\x1B[31m- Deleted: ${itemPath}\x1B[0m`);
+        }
+        console.log(`\x1B[31m\nThe Deleted process completed a total of ${results.length} files\n\x1B[0m`);
+    } else {
+        console.log(`\x1B[33m\nThe Lookup process completed a total of ${results.length} files\n\x1B[0m`);
+    }
 }
 
 export { startLookup };
