@@ -6,6 +6,7 @@
   "scripts": {
     "stub": "pnpm unbuild --stub",
     "replace": "node ./scripts/replace.mjs",
+    "lookup": "node ./scripts/lookup.mjs",
     "cmd-replace": "cmd /k node ./scripts/replace.mjs",
     "clean-only": "node ./scripts/clean.mjs",
     "clean": "pnpm clean-only --del-lock",

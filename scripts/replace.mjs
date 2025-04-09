@@ -82,7 +82,7 @@ import { startReplace } from "../dist/index.mjs";
       // root: "D:\\projects\\Outside\\wadv-admin",
     },
   ];
-  await start({
+  await startReplace({
     // 目标集合
     targets,
     // 排除文件

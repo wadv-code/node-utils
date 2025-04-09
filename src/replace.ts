@@ -241,7 +241,7 @@ async function startReplacement({ targets, excludes, root = rootDir }: StartRepl
   try {
     await replaceTargetsRecursively(root, targets, excludes, root);
     // 输出当前目录计数
-    console.log(`'\x1B[32m${root} for ${count} times\n\x1B[0m`);
+    console.log(`\x1B[32m${root} for ${count} times\n\x1B[0m`);
     // 计入总数
     total += count;
     // 清除当前目录计数
@@ -295,7 +295,7 @@ async function startReplace(option: StartReplaceOptions) {
     await startReplacement(option);
   }
 
-  console.log(`'\x1B[32m\nThe replace process completed a total of ${total} files\n\x1B[0m`);
+  console.log(`\x1B[32m\nThe replace process completed a total of ${total} files\n\x1B[0m`);
 }
 
 export { startReplace };

@@ -6,6 +6,7 @@ export interface TypedString {
 export interface ReplaceTarget {
   // 匹配规则
   pattern: string;
+  regex?: RegExp;
   // 目标
   target?: string | string[];
   // 替换
@@ -18,12 +19,20 @@ export interface ReplaceTarget {
   root?: string;
   // 正则符号
   flags?: string;
+  // 排除的文件或目录
+  excludes?: string[];
 }
 
 export type ReplaceTargets = ReplaceTarget[];
 
 // 替换参数
 export interface StartReplaceOptions {
+  targets: ReplaceTargets;
+  excludes: string[];
+  root?: string;
+}
+
+export interface StartLookupOptions {
   targets: ReplaceTargets;
   excludes: string[];
   root?: string;
